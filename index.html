@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>chocobooth - Y2K Retro Photobooth</title>
+
+  <!-- Google Fonts: Pixel font (Press Start 2P & VT323) + Soft rounded font (Nunito) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <!-- Full Screen Camera Flash Overlay -->
+  <div id="flash-overlay" class="flash-overlay"></div>
+
+  <!-- Main Application Wrapper -->
+  <div class="app-layout">
+    
+    <!-- Header with Mascot Logo & Real Text in Pixel Font -->
+    <header class="app-header">
+      <div class="brand-container">
+        <img src="./assets/mascot/choco-logo.png" alt="Choco Mascot Logo" class="brand-logo" id="brand-logo">
+        <h1 class="brand-title">chocobooth</h1>
+      </div>
+
+      <div class="header-actions">
+        <button id="sound-toggle-btn" class="retro-btn sound-btn" title="Toggle Sound">
+          <span id="sound-icon">🔊</span> SOUND: <span id="sound-state-text">ON</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- VIEW 1: Main Camera Screen (Clean, Focused, Full-Width 4:3) -->
+    <main id="booth-view" class="booth-workspace main-screen-layout">
+      <!-- Background Photobooth Curtains & Sparkle Stars (Pure Decoration) -->
+      <div class="booth-decorations-layer" aria-hidden="true">
+        <!-- Left Photobooth Curtain -->
+        <div class="booth-curtain curtain-left">
+          <div class="curtain-valance">
+            <svg class="curtain-valance-svg" preserveAspectRatio="none" viewBox="0 0 100 24">
+              <path d="M0 0 L100 0 L100 12 Q87.5 24 75 12 Q62.5 24 50 12 Q37.5 24 25 12 Q12.5 24 0 12 Z" fill="#B8404A" stroke="#2B2330" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="curtain-body"></div>
+          <div class="curtain-tieback tieback-left">
+            <svg class="tieback-bow" viewBox="0 0 40 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="10" cy="12" rx="9" ry="7" transform="rotate(-15 10 12)" fill="#FFF4E0" stroke="#2B2330" stroke-width="2"/>
+              <ellipse cx="30" cy="12" rx="9" ry="7" transform="rotate(15 30 12)" fill="#FFF4E0" stroke="#2B2330" stroke-width="2"/>
+              <path d="M16 18 L10 29 L16 26 L20 20 Z" fill="#FFF4E0" stroke="#2B2330" stroke-width="1.8"/>
+              <path d="M24 18 L30 29 L24 26 L20 20 Z" fill="#FFF4E0" stroke="#2B2330" stroke-width="1.8"/>
+              <rect x="15" y="8" width="10" height="9" rx="3" fill="#FFF4E0" stroke="#2B2330" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Right Photobooth Curtain -->
+        <div class="booth-curtain curtain-right">
+          <div class="curtain-valance">
+            <svg class="curtain-valance-svg" preserveAspectRatio="none" viewBox="0 0 100 24">
+              <path d="M0 0 L100 0 L100 12 Q87.5 24 75 12 Q62.5 24 50 12 Q37.5 24 25 12 Q12.5 24 0 12 Z" fill="#B8404A" stroke="#2B2330" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="curtain-body"></div>
+          <div class="curtain-tieback tieback-right">
+            <svg class="tieback-bow" viewBox="0 0 40 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="10" cy="12" rx="9" ry="7" transform="rotate(-15 10 12)" fill="#FFF4E0" stroke="#2B2330" stroke-width="2"/>
+              <ellipse cx="30" cy="12" rx="9" ry="7" transform="rotate(15 30 12)" fill="#FFF4E0" stroke="#2B2330" stroke-width="2"/>
+              <path d="M16 18 L10 29 L16 26 L20 20 Z" fill="#FFF4E0" stroke="#2B2330" stroke-width="1.8"/>
+              <path d="M24 18 L30 29 L24 26 L20 20 Z" fill="#FFF4E0" stroke="#2B2330" stroke-width="1.8"/>
+              <rect x="15" y="8" width="10" height="9" rx="3" fill="#FFF4E0" stroke="#2B2330" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 6 Four-Point Sparkle Stars (Cream & White, Slow Twinkle) -->
+        <svg class="sparkle-star star-1" viewBox="0 0 24 24" fill="#FFF4E0">
+          <path d="M12 0 C12 6.6 6.6 12 0 12 C6.6 12 12 17.4 12 24 C12 17.4 17.4 12 24 12 C17.4 12 12 6.6 12 0 Z"/>
+        </svg>
+        <svg class="sparkle-star star-2" viewBox="0 0 24 24" fill="#ffffff">
+          <path d="M12 0 C12 6.6 6.6 12 0 12 C6.6 12 12 17.4 12 24 C12 17.4 17.4 12 24 12 C17.4 12 12 6.6 12 0 Z"/>
+        </svg>
+        <svg class="sparkle-star star-3" viewBox="0 0 24 24" fill="#FFF4E0">
+          <path d="M12 0 C12 6.6 6.6 12 0 12 C6.6 12 12 17.4 12 24 C12 17.4 17.4 12 24 12 C17.4 12 12 6.6 12 0 Z"/>
+        </svg>
+        <svg class="sparkle-star star-4" viewBox="0 0 24 24" fill="#ffffff">
+          <path d="M12 0 C12 6.6 6.6 12 0 12 C6.6 12 12 17.4 12 24 C12 17.4 17.4 12 24 12 C17.4 12 12 6.6 12 0 Z"/>
+        </svg>
+        <svg class="sparkle-star star-5" viewBox="0 0 24 24" fill="#FFF4E0">
+          <path d="M12 0 C12 6.6 6.6 12 0 12 C6.6 12 12 17.4 12 24 C12 17.4 17.4 12 24 12 C17.4 12 12 6.6 12 0 Z"/>
+        </svg>
+        <svg class="sparkle-star star-6" viewBox="0 0 24 24" fill="#ffffff">
+          <path d="M12 0 C12 6.6 6.6 12 0 12 C6.6 12 12 17.4 12 24 C12 17.4 17.4 12 24 12 C17.4 12 12 6.6 12 0 Z"/>
+        </svg>
+      </div>
+
+      <div class="booth-center-column">
+        
+        <!-- Retro OS Camera Window -->
+        <section class="retro-window camera-window">
+          <div class="window-titlebar">
+            <div class="titlebar-title">
+              <span class="titlebar-icon">📷</span>
+              <span class="titlebar-text">camera_preview.exe</span>
+            </div>
+            <div class="titlebar-controls">
+              <button class="win-btn win-min" tabindex="-1">_</button>
+              <button class="win-btn win-max" tabindex="-1">□</button>
+              <button class="win-btn win-close" tabindex="-1">✕</button>
+            </div>
+          </div>
+
+          <div class="window-body camera-window-body">
+            <!-- Full Width 4:3 Camera Viewport (Clearly the largest element on page) -->
+            <div class="camera-viewport-container">
+              <!-- Mirrored live webcam view -->
+              <video id="webcam-video" autoplay playsinline muted></video>
+
+              <!-- Overlays -->
+              <div id="video-status" class="viewport-status">Connecting to webcam...</div>
+              <div id="countdown-overlay" class="countdown-overlay" style="display: none;">3</div>
+              
+              <!-- Small Photo X of 4 indicator during capture -->
+              <div id="photo-index-badge" class="photo-indicator-badge" style="display: none;">PHOTO 1 OF 4</div>
+
+              <!-- Disposable Camera Live Orange Date Stamp Badge -->
+              <div id="camera-disposable-badge" class="camera-disposable-badge" style="display: none;">'04 11 08</div>
+            </div>
+
+            <!-- Retro Camera Filter Selector Bar -->
+            <div class="filter-selector-bar">
+              <span class="filter-bar-label">FILTER:</span>
+              <div class="filter-pills-row" id="booth-filter-pills">
+                <button type="button" class="filter-pill active" data-filter="none">★ Normal</button>
+                <button type="button" class="filter-pill" data-filter="bw">B&W</button>
+                <button type="button" class="filter-pill" data-filter="vintage">Vintage</button>
+                <button type="button" class="filter-pill" data-filter="disposable">Disposable</button>
+                <button type="button" class="filter-pill" data-filter="softGlow">Soft Glow</button>
+              </div>
+            </div>
+
+            <!-- Merged Choco Operator & Speech Bubble Row (Side-by-side) -->
+            <div class="choco-companion-row">
+              <div class="speech-bubble-wrapper">
+                <div id="speech-bubble" class="pixel-speech-bubble">
+                  Ready when you are.
+                </div>
+                <div class="speech-bubble-pointer"></div>
+              </div>
+
+              <div class="mascot-frame">
+                <div id="sleeping-z" class="sleeping-z-container" style="display: none;">
+                  <span class="z-item z1">z</span>
+                  <span class="z-item z2">Z</span>
+                  <span class="z-item z3">z</span>
+                </div>
+                <img id="mascot-img" class="mascot-portrait" src="./assets/mascot/choco-idle.png" alt="Choco Booth Mascot">
+              </div>
+            </div>
+
+            <!-- Controls bar beneath camera -->
+            <div class="camera-controls-bar">
+              <button id="start-btn" class="retro-btn primary-btn" disabled>
+                ★ START BOOTH ★
+              </button>
+              <button id="retake-btn" class="retro-btn secondary-btn" disabled>
+                ↺ RETAKE
+              </button>
+            </div>
+
+            <!-- Slim One-Line Status Caption (No heavy box outline) -->
+            <div class="system-status-ticker">
+              <span class="ticker-label">STATUS:</span>
+              <span id="booth-status-msg" class="ticker-text">Camera active. Ready when you are!</span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- VIEW 2: "Pick your strip" Screen (Interactive 6-Theme Carousel) -->
+    <main id="picker-view" class="booth-workspace picker-screen-layout" style="display: none;">
+      <section class="retro-window picker-window">
+        <div class="window-titlebar picker-titlebar">
+          <div class="titlebar-title">
+            <span class="titlebar-icon">🎞️</span>
+            <span class="titlebar-text">pick_your_strip.exe</span>
+          </div>
+          <div class="titlebar-controls">
+            <button class="win-btn win-min" tabindex="-1">_</button>
+            <button class="win-btn win-max" tabindex="-1">□</button>
+            <button class="win-btn win-close" tabindex="-1">✕</button>
+          </div>
+        </div>
+
+        <div class="window-body picker-window-body">
+          <!-- 6-Theme Carousel Viewport -->
+          <div class="carousel-viewport-wrapper" id="carousel-viewport-wrapper">
+            <button id="carousel-prev-btn" class="retro-btn carousel-nav-btn prev-btn" title="Previous theme (Left Arrow)">◀</button>
+
+            <div class="carousel-stage-container" id="carousel-stage">
+              <!-- 6 Carousel Slides injected dynamically with real photos -->
+            </div>
+
+            <button id="carousel-next-btn" class="retro-btn carousel-nav-btn next-btn" title="Next theme (Right Arrow)">▶</button>
+          </div>
+
+          <!-- Theme Details & Position Dots -->
+          <div class="carousel-meta-section">
+            <div id="carousel-theme-name" class="carousel-theme-title">★ STRAWBERRY MILK ★</div>
+            <div id="carousel-theme-pattern" class="carousel-pattern-subtitle">Pattern: Hearts</div>
+            <div class="carousel-dots-row" id="carousel-dots-row">
+              <!-- 6 Position Dots -->
+            </div>
+          </div>
+
+          <!-- Review Screen Extras: Filter Bar & Sticker Tray -->
+          <div class="picker-extras-panel">
+            <!-- Filter selector row on review screen -->
+            <div class="extras-row filter-extras-row">
+              <span class="extras-label">FILTER:</span>
+              <div class="filter-pills-row" id="picker-filter-pills">
+                <button type="button" class="filter-pill active" data-filter="none">★ Normal</button>
+                <button type="button" class="filter-pill" data-filter="bw">B&W</button>
+                <button type="button" class="filter-pill" data-filter="vintage">Vintage</button>
+                <button type="button" class="filter-pill" data-filter="disposable">Disposable</button>
+                <button type="button" class="filter-pill" data-filter="softGlow">Soft Glow</button>
+              </div>
+            </div>
+
+            <!-- Sticker Tray: 8 cute cat-themed stickers -->
+            <div class="extras-row sticker-extras-row">
+              <div class="sticker-label-group">
+                <span class="extras-label">STICKERS:</span>
+              </div>
+              <div class="sticker-tray-group" id="sticker-tray-group">
+                <button type="button" class="sticker-tray-btn" data-sticker="paw" title="Paw Print" draggable="true">
+                  <span class="sticker-btn-emoji">🐾</span>
+                </button>
+                <button type="button" class="sticker-tray-btn" data-sticker="heart" title="Sparkle Heart" draggable="true">
+                  <span class="sticker-btn-emoji">💖</span>
+                </button>
+                <button type="button" class="sticker-tray-btn" data-sticker="star" title="Pixel Star" draggable="true">
+                  <span class="sticker-btn-emoji">⭐</span>
+                </button>
+                <button type="button" class="sticker-tray-btn" data-sticker="bow" title="Ribbon Bow" draggable="true">
+                  <span class="sticker-btn-emoji">🎀</span>
+                </button>
+                <button type="button" class="sticker-tray-btn" data-sticker="chocoStamp" title="CHOCO Stamp" draggable="true">
+                  <span class="sticker-btn-emoji">🏷️</span>
+                </button>
+                <button type="button" class="sticker-tray-btn" data-sticker="fish" title="Fish Treat" draggable="true">
+                  <span class="sticker-btn-emoji">🐟</span>
+                </button>
+                <button type="button" class="sticker-tray-btn" data-sticker="flower" title="Daisy Flower" draggable="true">
+                  <span class="sticker-btn-emoji">🌸</span>
+                </button>
+                <button type="button" class="sticker-tray-btn" data-sticker="catFace" title="Choco Face" draggable="true">
+                  <span class="sticker-btn-emoji">🐱</span>
+                </button>
+              </div>
+              <button type="button" id="clear-stickers-btn" class="retro-btn clear-stickers-btn" title="Remove all placed stickers">
+                ✕ CLEAR
+              </button>
+            </div>
+          </div>
+
+          <!-- Bottom Action Deck: Choco (Happy) + Action Buttons -->
+          <div class="picker-bottom-deck">
+            <div class="picker-choco-group">
+              <div class="speech-bubble-wrapper">
+                <div class="pixel-speech-bubble">
+                  Fine. You look good.
+                </div>
+                <div class="speech-bubble-pointer"></div>
+              </div>
+              <div class="mascot-frame">
+                <img src="./assets/mascot/choco-happy.png" alt="Choco Happy" class="mascot-portrait">
+              </div>
+            </div>
+
+            <div class="picker-actions-group">
+              <button id="carousel-download-btn" class="retro-btn export-btn">
+                DOWNLOAD
+              </button>
+              <button id="carousel-retake-btn" class="retro-btn secondary-btn">
+                ↺ RETAKE ALL
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <!-- Developing Screen Modal / Overlay -->
+  <div id="developing-modal" class="developing-overlay" style="display: none;">
+    <div class="retro-window developing-window">
+      <div class="window-titlebar developing-titlebar">
+        <div class="titlebar-title">
+          <span class="titlebar-icon">🧪</span>
+          <span class="titlebar-text">darkroom_developing.exe</span>
+        </div>
+      </div>
+      <div class="window-body developing-body">
+        <div class="developing-mascot-box">
+          <div class="developing-z-animation">
+            <span class="dev-z dev-z1">z</span>
+            <span class="dev-z dev-z2">Z</span>
+            <span class="dev-z dev-z3">z</span>
+          </div>
+          <img src="./assets/mascot/choco-sleeping.png" alt="Choco is sleeping while developing" class="developing-choco-img">
+        </div>
+
+        <p class="developing-text">Choco is developing your photos...</p>
+        <div id="developing-subtext" class="developing-subtext">Washing negative prints...</div>
+
+        <!-- Chunky retro progress bar -->
+        <div class="chunky-progress-track">
+          <div id="developing-progress-fill" class="chunky-progress-fill" style="width: 0%;"></div>
+        </div>
+
+        <div class="progress-meta">
+          <span id="developing-percentage">0%</span>
+          <span>PLEASE WAIT</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/booth.js"></script>
+</body>
+</html>

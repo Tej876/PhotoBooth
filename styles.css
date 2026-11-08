@@ -1,0 +1,1418 @@
+/* ==========================================================================
+   chocobooth - Y2K Retro Photobooth Stylesheet
+   Flow: Main Booth Screen -> Developing Screen -> "Pick your strip" Carousel
+   ========================================================================== */
+
+:root {
+  /* Core Color Palette */
+  --dusty-pink: #F4B9C2;
+  --cream: #FFF4E0;
+  --cream-light: #FFFBF2;
+  --outline: #2B2330;
+  --navy: #2E3F7F;
+  --navy-light: #3D52A0;
+  --sage: #9DB59A;
+  --brick-red: #B8404A;
+  --teal: #2F8F8A;
+  --mustard: #E2B33C;
+
+  /* Typography */
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-condensed: 'VT323', monospace;
+  --font-rounded: 'Nunito', sans-serif;
+
+  /* Shadows */
+  --shadow-hard-sm: 2px 2px 0px var(--outline);
+  --shadow-hard: 3px 3px 0px var(--outline);
+  --shadow-hard-lg: 5px 5px 0px var(--outline);
+}
+
+/* Base Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  max-height: 100vh;
+}
+
+body {
+  font-family: var(--font-rounded);
+  background-color: var(--dusty-pink);
+  /* Faint Repeating Cute Heart Pattern */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' fill-opacity='0.16' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+  background-size: 36px 36px;
+  color: var(--outline);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* ==========================================================================
+   Full Screen Camera Flash
+   ========================================================================== */
+.flash-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #ffffff;
+  z-index: 999999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.08s ease-out;
+}
+
+.flash-overlay.active {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Layout Containers
+   ========================================================================== */
+.app-layout {
+  width: 100%;
+  max-width: 1100px;
+  height: 100%;
+  max-height: calc(100vh - 20px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ==========================================================================
+   App Header: Logo + Real Text in Pixel Font
+   ========================================================================== */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 4px 4px 6px 4px;
+  flex: none;
+  position: relative;
+  z-index: 5;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.brand-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 36px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 0px rgba(43, 35, 48, 0.25));
+}
+
+/* Real Text in Pixel Font */
+.brand-title {
+  font-family: var(--font-pixel);
+  font-size: 20px;
+  color: var(--brick-red);
+  text-shadow: 2px 2px 0px var(--outline);
+  letter-spacing: 0.5px;
+  margin: 0;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   Workspace View Panels
+   ========================================================================== */
+.booth-workspace {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* Main Screen Layout (Clean single column for maximum camera prominence) */
+.main-screen-layout {
+  display: flex;
+  justify-content: center;
+}
+
+.booth-center-column {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  position: relative;
+  z-index: 5;
+}
+
+/* ==========================================================================
+   Retro OS Window Component
+   ========================================================================== */
+.retro-window {
+  background-color: var(--cream);
+  border: 2.5px solid var(--outline);
+  box-shadow: var(--shadow-hard);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.camera-window {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Window Titlebar (Clean, Never overlaps controls) */
+.window-titlebar {
+  background-color: var(--navy);
+  color: #ffffff;
+  padding: 4px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2.5px solid var(--outline);
+  flex: none;
+  min-width: 0;
+}
+
+.titlebar-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-pixel);
+  font-size: 9.5px;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
+}
+
+.titlebar-icon {
+  font-size: 11px;
+  flex: none;
+}
+
+.titlebar-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.titlebar-controls {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+.picker-titlebar {
+  background-color: var(--brick-red);
+  color: #ffffff;
+}
+
+.win-btn {
+  width: 16px;
+  height: 16px;
+  background-color: var(--cream);
+  color: var(--outline);
+  border: 1.5px solid var(--outline);
+  border-radius: 2px;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 1px 1px 0px var(--outline);
+  cursor: pointer;
+  padding: 0;
+}
+
+.win-btn.win-close {
+  background-color: var(--brick-red);
+  color: #fff;
+}
+
+.win-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.camera-window-body {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+  justify-content: space-between;
+}
+
+/* ==========================================================================
+   Camera Viewport (Full Width, Exact 4:3 Ratio, Largest Element)
+   ========================================================================== */
+.camera-viewport-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-color: #17131b;
+  border: 2.5px solid var(--outline);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.4);
+  flex: 1;
+  min-height: 0;
+  max-height: calc(100vh - 240px);
+}
+
+/* Mirrored video preview */
+#webcam-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  display: block;
+}
+
+.viewport-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(43, 35, 48, 0.88);
+  color: #fff;
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  line-height: 1.6;
+  padding: 16px;
+  text-align: center;
+}
+
+.viewport-status.error-state {
+  background-color: rgba(184, 64, 74, 0.94);
+  color: #ffffff;
+}
+
+/* Small "Photo X of 4" indicator during capture */
+.photo-indicator-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: var(--brick-red);
+  color: #ffffff;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  padding: 5px 8px;
+  border: 2px solid var(--outline);
+  border-radius: 4px;
+  box-shadow: var(--shadow-hard-sm);
+  z-index: 20;
+  letter-spacing: 0.5px;
+}
+
+/* Large 3-2-1 Countdown Overlay in Pixel Font */
+.countdown-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(43, 35, 48, 0.35);
+  color: #fff;
+  font-family: var(--font-pixel);
+  font-size: 72px;
+  font-weight: bold;
+  text-shadow: 3px 3px 0px var(--outline);
+  pointer-events: none;
+  animation: countdownPulse 0.4s ease-out;
+}
+
+@keyframes countdownPulse {
+  0% { transform: scale(1.4); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ==========================================================================
+   Merged Choco Operator Row (Compact, Side-by-side)
+   ========================================================================== */
+.choco-companion-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 2px 0;
+  flex: none;
+}
+
+/* Speech Bubble in Pixel Font */
+.speech-bubble-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pixel-speech-bubble {
+  background-color: #ffffff;
+  border: 2px solid var(--outline);
+  box-shadow: var(--shadow-hard-sm);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--outline);
+  width: 100%;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+/* Speech bubble pointer pointing toward Choco */
+.speech-bubble-pointer {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 8px solid var(--outline);
+}
+
+.speech-bubble-pointer::after {
+  content: '';
+  position: absolute;
+  right: 2px;
+  top: -6px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 10px solid #ffffff;
+}
+
+/* Mascot Portrait Container */
+.mascot-frame {
+  position: relative;
+  width: 86px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  align-self: center;
+}
+
+/* Mascot Image */
+.mascot-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  align-self: center;
+  flex: none;
+  display: block;
+}
+
+/* Animated Floating "Z" for Choco's Sleeping State */
+.sleeping-z-container {
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  display: flex;
+  gap: 3px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.z-item {
+  font-family: var(--font-pixel);
+  color: var(--navy);
+  font-weight: bold;
+  animation: floatZ 1.6s infinite ease-in-out;
+}
+
+.z-item.z1 { font-size: 9px; animation-delay: 0s; }
+.z-item.z2 { font-size: 12px; animation-delay: 0.35s; }
+.z-item.z3 { font-size: 15px; animation-delay: 0.7s; }
+
+@keyframes floatZ {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  40% { opacity: 1; transform: translate(4px, -8px) scale(1); }
+  80% { opacity: 0.8; transform: translate(8px, -18px) scale(1.1); }
+  100% { opacity: 0; transform: translate(12px, -26px) scale(1.2); }
+}
+
+/* ==========================================================================
+   Camera Controls & Slim Status Caption (No Heavy Box Outline)
+   ========================================================================== */
+.camera-controls-bar {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+/* Slim One-Line Status Caption */
+.system-status-ticker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 2px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--outline);
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  flex: none;
+}
+
+.ticker-label {
+  font-family: var(--font-pixel);
+  font-size: 8.5px;
+  color: var(--navy);
+  letter-spacing: 0.5px;
+}
+
+.ticker-text {
+  font-family: var(--font-rounded);
+  font-size: 11.5px;
+  color: #55444e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   Buttons (Chunky Y2K Style with Hard Offset Shadows)
+   ========================================================================== */
+.retro-btn {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  padding: 8px 14px;
+  border: 2.5px solid var(--outline);
+  border-radius: 6px;
+  box-shadow: var(--shadow-hard-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.05s, box-shadow 0.05s, background-color 0.15s;
+  text-decoration: none;
+}
+
+.retro-btn:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.retro-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--outline);
+}
+
+.retro-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+
+.primary-btn {
+  background-color: var(--brick-red);
+  color: #ffffff;
+  flex: 2;
+  font-size: 11px;
+}
+
+.secondary-btn {
+  background-color: var(--cream-light);
+  color: var(--outline);
+  flex: 1;
+}
+
+.sound-btn {
+  background-color: var(--cream-light);
+  color: var(--outline);
+  font-size: 9px;
+  padding: 6px 10px;
+}
+
+.export-btn {
+  background-color: var(--teal);
+  color: #ffffff;
+  font-size: 11px;
+  padding: 10px 14px;
+}
+
+/* ==========================================================================
+   VIEW 2: "Pick your strip" Screen (Interactive 6-Theme Carousel)
+   ========================================================================== */
+.picker-screen-layout {
+  display: flex;
+  justify-content: center;
+}
+
+.picker-window {
+  width: 100%;
+  max-width: 840px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.picker-window-body {
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  min-height: 0;
+  gap: 6px;
+}
+
+/* Carousel Viewport */
+.carousel-viewport-wrapper {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.carousel-stage-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Individual Carousel Slide */
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.28s cubic-bezier(0.2, 0.85, 0.25, 1), opacity 0.28s ease, filter 0.28s ease;
+  will-change: transform, opacity;
+  user-select: none;
+}
+
+/* Strip Canvas in Carousel */
+.carousel-strip-canvas {
+  display: block;
+  height: 100%;
+  max-height: calc(100vh - 270px);
+  width: auto;
+  object-fit: contain;
+  border: 2.5px solid var(--outline);
+  box-shadow: var(--shadow-hard);
+  border-radius: 4px;
+  background-color: var(--cream);
+}
+
+/* Navigation Arrow Buttons */
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--cream);
+  color: var(--outline);
+  font-size: 13px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-hard);
+}
+
+.carousel-nav-btn:hover {
+  background-color: var(--cream-light);
+}
+
+.prev-btn {
+  left: 12px;
+}
+
+.next-btn {
+  right: 12px;
+}
+
+/* Theme Details & Position Dots */
+.carousel-meta-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+}
+
+.carousel-theme-title {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--brick-red);
+  text-shadow: 1px 1px 0px var(--outline);
+  letter-spacing: 0.5px;
+}
+
+.carousel-pattern-subtitle {
+  font-family: var(--font-rounded);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--navy);
+}
+
+.carousel-dots-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.carousel-dot {
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid var(--outline);
+  border-radius: 50%;
+  background-color: var(--cream);
+  box-shadow: 1px 1px 0px var(--outline);
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.15s;
+}
+
+.carousel-dot.active {
+  background-color: var(--brick-red);
+  transform: scale(1.2);
+}
+
+/* Bottom Action Deck */
+.picker-bottom-deck {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+  padding: 2px 0;
+  flex: none;
+}
+
+.picker-choco-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.picker-actions-group {
+  display: flex;
+  gap: 10px;
+  flex: none;
+}
+
+/* ==========================================================================
+   Developing Modal Screen
+   ========================================================================== */
+.developing-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(43, 35, 48, 0.72);
+  backdrop-filter: blur(2px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.developing-window {
+  width: 100%;
+  max-width: 420px;
+  animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.developing-titlebar {
+  background-color: var(--teal);
+}
+
+.developing-body {
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.developing-mascot-box {
+  position: relative;
+  width: 130px;
+  height: 98px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.developing-choco-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.developing-z-animation {
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  display: flex;
+  gap: 3px;
+}
+
+.dev-z {
+  font-family: var(--font-pixel);
+  color: var(--teal);
+  font-weight: bold;
+  animation: floatZ 1.6s infinite ease-in-out;
+}
+
+.dev-z1 { font-size: 10px; animation-delay: 0s; }
+.dev-z2 { font-size: 14px; animation-delay: 0.4s; }
+.dev-z3 { font-size: 18px; animation-delay: 0.8s; }
+
+.developing-text {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--outline);
+}
+
+.developing-subtext {
+  font-family: var(--font-rounded);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-top: -4px;
+}
+
+/* Chunky Retro Segmented Progress Bar */
+.chunky-progress-track {
+  width: 100%;
+  height: 24px;
+  background-color: var(--cream-light);
+  border: 2.5px solid var(--outline);
+  box-shadow: inset 2px 2px 0px rgba(43, 35, 48, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 2px;
+}
+
+.chunky-progress-fill {
+  height: 100%;
+  background-color: var(--brick-red);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--brick-red),
+    var(--brick-red) 8px,
+    #cc4854 8px,
+    #cc4854 16px
+  );
+  border-radius: 2px;
+  transition: width 0.12s linear;
+}
+
+.progress-meta {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: var(--outline);
+}
+
+/* ==========================================================================
+   Main Screen Side Decorations (Photobooth Curtains & Sparkle Stars)
+   ========================================================================== */
+.booth-decorations-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  opacity: 0.85; /* Soft contrast keeps central camera window as primary visual focus */
+}
+
+/* Photobooth Curtains on Left & Right Edges */
+.booth-curtain {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: clamp(0px, 13vw, calc((100vw - 720px) / 2));
+  pointer-events: none;
+}
+
+.curtain-left {
+  left: 0;
+  border-right: 2.5px solid var(--outline);
+  box-shadow: 3px 0 0 var(--outline);
+}
+
+.curtain-right {
+  right: 0;
+  border-left: 2.5px solid var(--outline);
+  box-shadow: -3px 0 0 var(--outline);
+}
+
+/* Curtain Body: Pleated Vertical Stripes with Brick Red & Darker Fold Shade */
+.curtain-body {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: var(--brick-red);
+  background-image: repeating-linear-gradient(
+    90deg,
+    #B8404A 0,
+    #B8404A 1.1vw,
+    #96333D 1.1vw,
+    #96333D 2.2vw
+  );
+}
+
+/* Scalloped Valance Along the Top Edge */
+.curtain-valance {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: clamp(24px, 4vh, 38px);
+  z-index: 3;
+}
+
+.curtain-valance-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 2px 0 var(--outline));
+}
+
+.curtain-valance-svg path {
+  vector-effect: non-scaling-stroke;
+}
+
+/* Curtain Tieback Strap & Small Cream Bow at 33% Down */
+.curtain-tieback {
+  position: absolute;
+  top: 33%;
+  width: 100%;
+  height: clamp(6px, 0.8vh, 10px);
+  background-color: var(--cream);
+  border-top: 1.5px solid var(--outline);
+  border-bottom: 1.5px solid var(--outline);
+  z-index: 4;
+}
+
+.tieback-bow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(26px, 2.4vw, 38px);
+  height: auto;
+}
+
+.tieback-left .tieback-bow {
+  right: clamp(-16px, -1.2vw, -8px);
+  filter: drop-shadow(2px 2px 0 var(--outline));
+}
+
+.tieback-right .tieback-bow {
+  left: clamp(-16px, -1.2vw, -8px);
+  filter: drop-shadow(-2px 2px 0 var(--outline));
+}
+
+/* 6 Four-Point Sparkle Stars (Cream & White, Subtle Twinkle) */
+.sparkle-star {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1;
+  filter: drop-shadow(1px 1px 0 rgba(43, 35, 48, 0.25));
+}
+
+/* Left Pink Area Stars */
+.star-1 {
+  left: clamp(7vw, 11vw, calc(50vw - 370px));
+  top: 18%;
+  width: 1.4vw;
+  height: 1.4vw;
+  min-width: 13px;
+  min-height: 13px;
+  animation: starTwinkle 4.2s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+.star-2 {
+  left: clamp(4vw, 7vw, calc(50vw - 420px));
+  top: 48%;
+  width: 1.6vw;
+  height: 1.6vw;
+  min-width: 15px;
+  min-height: 15px;
+  animation: starTwinkle 5.4s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+.star-3 {
+  left: clamp(8vw, 12vw, calc(50vw - 380px));
+  top: 74%;
+  width: 1.3vw;
+  height: 1.3vw;
+  min-width: 12px;
+  min-height: 12px;
+  animation: starTwinkle 4.6s ease-in-out infinite;
+  animation-delay: 2.8s;
+}
+
+/* Right Pink Area Stars */
+.star-4 {
+  right: clamp(7vw, 11vw, calc(50vw - 370px));
+  top: 22%;
+  width: 1.5vw;
+  height: 1.5vw;
+  min-width: 14px;
+  min-height: 14px;
+  animation: starTwinkle 5.0s ease-in-out infinite;
+  animation-delay: 0.8s;
+}
+
+.star-5 {
+  right: clamp(4vw, 7vw, calc(50vw - 420px));
+  top: 52%;
+  width: 1.3vw;
+  height: 1.3vw;
+  min-width: 12px;
+  min-height: 12px;
+  animation: starTwinkle 4.0s ease-in-out infinite;
+  animation-delay: 2.2s;
+}
+
+.star-6 {
+  right: clamp(8vw, 12vw, calc(50vw - 380px));
+  top: 78%;
+  width: 1.6vw;
+  height: 1.6vw;
+  min-width: 15px;
+  min-height: 15px;
+  animation: starTwinkle 5.8s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+
+/* Twinkle: Opacity only, 4 to 6 seconds */
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .sparkle-star {
+    animation: none !important;
+    opacity: 0.55;
+  }
+}
+
+/* Narrow Laptop & Mobile Screens: Gracefully collapse decorations */
+@media (max-width: 820px) {
+  .booth-decorations-layer {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Phase 4: Photo Filters & Sticker Tray Styling
+   ========================================================================== */
+
+/* Filter Selector Bar on Booth Main Screen */
+.filter-selector-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 3px 0 1px 0;
+  flex: none;
+}
+
+.filter-bar-label {
+  font-family: var(--font-pixel);
+  font-size: 8.5px;
+  color: var(--navy);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.filter-pills-row {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.filter-pill {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  padding: 4px 8px;
+  border: 1.5px solid var(--outline);
+  border-radius: 4px;
+  background-color: var(--cream);
+  color: var(--outline);
+  box-shadow: 1.5px 1.5px 0px var(--outline);
+  cursor: pointer;
+  transition: background-color 0.12s, transform 0.08s, box-shadow 0.08s;
+  user-select: none;
+}
+
+.filter-pill:hover {
+  background-color: #ffffff;
+}
+
+.filter-pill.active {
+  background-color: var(--brick-red);
+  color: #FFF4E0;
+  box-shadow: 1px 1px 0px var(--outline);
+  transform: translate(1px, 1px);
+}
+
+/* Disposable Camera Live Date Stamp Badge in Viewport */
+.camera-disposable-badge {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  font-family: "VT323", monospace;
+  font-size: 22px;
+  font-weight: bold;
+  color: #FF7A00;
+  text-shadow: 0 0 6px rgba(255, 120, 0, 0.9);
+  pointer-events: none;
+  z-index: 15;
+  letter-spacing: 1px;
+}
+
+/* Review Screen Extras Panel (Filters + Stickers) */
+.picker-extras-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  max-width: 640px;
+  align-items: center;
+  background-color: var(--cream-light);
+  border: 2px solid var(--outline);
+  box-shadow: 2px 2px 0px var(--outline);
+  border-radius: 6px;
+  padding: 5px 12px;
+  flex: none;
+}
+
+.extras-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.extras-label {
+  font-family: var(--font-pixel);
+  font-size: 8.5px;
+  color: var(--navy);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  flex: none;
+}
+
+.extras-subtext {
+  font-family: var(--font-rounded);
+  font-size: 11px;
+  font-weight: 700;
+  color: #7A6966;
+}
+
+.sticker-label-group {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex: none;
+}
+
+/* Sticker Tray & Buttons */
+.sticker-tray-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.sticker-tray-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--cream);
+  border: 1.5px solid var(--outline);
+  border-radius: 6px;
+  box-shadow: 1.5px 1.5px 0px var(--outline);
+  cursor: grab;
+  padding: 2px;
+  transition: transform 0.1s, box-shadow 0.1s, background-color 0.1s;
+  user-select: none;
+}
+
+.sticker-tray-btn:hover {
+  transform: scale(1.15) translateY(-2px);
+  background-color: #ffffff;
+  box-shadow: 2px 2px 0px var(--outline);
+}
+
+.sticker-tray-btn:active {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+.sticker-btn-emoji {
+  font-size: 16px;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.clear-stickers-btn {
+  font-size: 8px;
+  padding: 4px 8px;
+  background-color: var(--cream);
+  color: var(--brick-red);
+  font-weight: bold;
+}
+
+/* Strip Wrapper for Relative Positioning with Stickers Overlay */
+.carousel-strip-wrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Placed Stickers Interactive Overlay on Active Slide */
+.strip-stickers-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 25;
+}
+
+.placed-sticker {
+  position: absolute;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(1.5px 1.5px 0px rgba(43, 35, 48, 0.35));
+  transition: outline 0.1s;
+}
+
+.placed-sticker.is-dragging {
+  cursor: grabbing;
+  z-index: 100;
+  opacity: 0.92;
+}
+
+.placed-sticker.selected,
+.placed-sticker:hover {
+  outline: 2px dashed var(--brick-red);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.placed-sticker svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+}
+
+.sticker-del-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background-color: var(--brick-red);
+  color: #FFF4E0;
+  border: 1.5px solid var(--outline);
+  box-shadow: 1px 1px 0px var(--outline);
+  font-family: monospace;
+  font-size: 9px;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 110;
+}
+
+.placed-sticker.selected .sticker-del-btn,
+.placed-sticker:hover .sticker-del-btn {
+  display: flex;
+}
+
+/* ==========================================================================
+   Phase 5: Loading State, Error Dialog, and Keyboard Shortcuts
+   ========================================================================== */
+
+/* Retro Webcam Loading State */
+.retro-spinner-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: 16px;
+}
+
+.retro-spinner-dots {
+  display: flex;
+  gap: 6px;
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  color: var(--teal);
+}
+
+.retro-spinner-dots .dot {
+  animation: pulseDot 1.2s infinite ease-in-out;
+}
+
+.retro-spinner-dots .d1 { animation-delay: 0s; }
+.retro-spinner-dots .d2 { animation-delay: 0.2s; }
+.retro-spinner-dots .d3 { animation-delay: 0.4s; }
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.25; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); color: var(--brick-red); }
+}
+
+.retro-loading-text {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: #FFF4E0;
+  letter-spacing: 0.5px;
+}
+
+.retro-loading-subtext {
+  font-family: var(--font-rounded);
+  font-size: 12px;
+  font-weight: 700;
+  color: #D3EFEE;
+}
+
+/* Retro Camera Error Dialog */
+.retro-error-dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  padding: 18px 20px;
+  max-width: 380px;
+  background-color: var(--cream);
+  border: 2.5px solid var(--outline);
+  box-shadow: var(--shadow-hard);
+  border-radius: 6px;
+  color: var(--outline);
+}
+
+.error-icon {
+  font-size: 26px;
+}
+
+.error-title {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--brick-red);
+}
+
+.error-desc {
+  font-family: var(--font-rounded);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--navy);
+}
+
+.retry-btn {
+  font-size: 9px;
+  padding: 6px 12px;
+  background-color: var(--brick-red);
+  color: #FFF4E0;
+  margin-top: 4px;
+}
+
+/* Keyboard Hint Badge on Start Button */
+.kbd-hint {
+  font-size: 8px;
+  opacity: 0.88;
+  margin-left: 6px;
+  background-color: rgba(43, 35, 48, 0.25);
+  padding: 2px 4px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-family: var(--font-pixel);
+  letter-spacing: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
