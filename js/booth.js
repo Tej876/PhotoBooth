@@ -198,10 +198,13 @@ function showError(msg) {
     <div class="retro-error-dialog">
       <div class="error-icon">📷⚠️</div>
       <div class="error-title">CAMERA ACCESS NEEDED</div>
-      <div class="error-desc">${msg}</div>
+      <div class="error-desc" id="camera-error-desc"></div>
       <button type="button" class="retro-btn retry-btn" id="camera-retry-btn">↺ RETRY ACCESS</button>
     </div>
   `;
+  const descEl = document.getElementById('camera-error-desc');
+  if (descEl) descEl.textContent = msg;
+
   videoStatusEl.style.display = 'flex';
   startBtn.disabled = true;
   statusMsgEl.textContent = 'Camera error: Please allow permissions.';
@@ -1032,6 +1035,13 @@ function init() {
   // Start webcam
   initWebcam();
 }
+
+// Clean up camera stream tracks when navigating away or closing page
+window.addEventListener('pagehide', () => {
+  if (state.stream) {
+    state.stream.getTracks().forEach((track) => track.stop());
+  }
+});
 
 // Kickoff
 if (document.readyState === 'loading') {
