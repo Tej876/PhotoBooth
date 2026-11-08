@@ -1,6 +1,8 @@
 # chocobooth 🐱📸
 > A cute Y2K retro online photobooth running 100% in your browser.
 
+**Live Website:** [https://tej876.github.io/PhotoBooth/](https://tej876.github.io/PhotoBooth/)
+
 ![chocobooth preview](./assets/mascot/choco-happy.png)
 
 **chocobooth** is an aesthetic, early-2000s desktop browser photobooth run by **Choco**, a regal, tortoiseshell Persian cat operator. Open the booth, allow your webcam, take 4 photos with a countdown, customize your strip with themes, vintage filters, and draggable cat stickers, and download a high-resolution vertical film strip PNG.
