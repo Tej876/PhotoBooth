@@ -49,7 +49,7 @@ All photo processing and rendering happens completely inside your browser using 
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **HTML5 & Vanilla JavaScript**: ES Modules, zero external frameworks, lightweight and ultra-fast.
 - **CSS3**: Custom properties, hard offset shadows, repeating gradients, responsive `vw`/`%` layout.
