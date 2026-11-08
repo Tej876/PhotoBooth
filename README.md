@@ -1,9 +1,7 @@
-# chocobooth 🐱📸
+# chocobooth 
 > A cute Y2K retro online photobooth running 100% in your browser.
 
 **Live Website:** [https://tej876.github.io/PhotoBooth/](https://tej876.github.io/PhotoBooth/)
-
-![chocobooth preview](./assets/mascot/choco-happy.png)
 
 **chocobooth** is an aesthetic, early-2000s desktop browser photobooth run by **Choco**, a regal, tortoiseshell Persian cat operator. Open the booth, allow your webcam, take 4 photos with a countdown, customize your strip with themes, vintage filters, and draggable cat stickers, and download a high-resolution vertical film strip PNG.
 
@@ -11,7 +9,7 @@ All photo processing and rendering happens completely inside your browser using 
 
 ---
 
-## ✨ Features
+##  Features
 
 - **Mirrored 4:3 Live Webcam Preview**: Large, centered retro OS window with real-time camera preview.
 - **3-2-1 Countdown & Capture Sequence**: Full-screen white flash and authentic mechanical shutter click with sound toggle.
@@ -19,12 +17,12 @@ All photo processing and rendering happens completely inside your browser using 
 - **Choco Mascot Operator**: Reactive expressions (`choco-idle`, `choco-shocked`, `choco-approve`, `choco-happy`, `choco-sleeping` with floating animated "z"s) and pixel-font dialogue.
 - **Darkroom Developing Screen**: Chunky retro segmented loading bar that simulates photo development before revealing the strip.
 - **6 Curated Strip Themes**:
-  - 🍓 **Strawberry Milk**: Dusty pink base with vector heart repeat pattern.
-  - 🕹️ **Midnight Arcade**: Deep navy with retro sparkle stars pattern.
-  - 🍵 **Matcha Latte**: Sage green with cute cat paw prints pattern.
-  - 🍒 **Cherry Pop**: Brick red with retro checkerboard pattern.
-  - 🌊 **Lagoon**: Cool teal with clean minimalist frame.
-  - 🍞 **Butter Toast**: Warm mustard yellow with heart accents.
+  -  **Strawberry Milk**: Dusty pink base with vector heart repeat pattern.
+  -  **Midnight Arcade**: Deep navy with retro sparkle stars pattern.
+  -  **Matcha Latte**: Sage green with cute cat paw prints pattern.
+  -  **Cherry Pop**: Brick red with retro checkerboard pattern.
+  -  **Lagoon**: Cool teal with clean minimalist frame.
+  -  **Butter Toast**: Warm mustard yellow with heart accents.
 - **Interactive Carousel Preview**:
   - Centered active strip displayed large and full-resolution.
   - Previous and next strips peeking in at the sides.
@@ -37,7 +35,7 @@ All photo processing and rendering happens completely inside your browser using 
   - **Soft Glow**: Dreamy Y2K diffused highlight bloom.
   - Live filter preview on webcam before shooting, and changeable anytime on the strip review screen.
 - **8 Draggable Y2K Cat Stickers**:
-  - 🐾 Paw Print, 💖 Sparkle Heart, ⭐ Pixel Star, 🎀 Ribbon Bow, 🏷️ "CHOCO" Stamp, 🐟 Fish Treat, 🌸 Daisy Flower, 🐱 Kitty Face.
+  -  Paw Print,  Sparkle Heart,  Pixel Star,  Ribbon Bow,  Stamp,  Fish Treat,  Daisy Flower,  Kitty Face.
   - Click to add to strip, or drag directly from the tray onto the strip.
   - Smooth pointer drag-and-drop to reposition anywhere on the strip.
   - Interactive selection with `✕` delete button, keyboard `Delete`/`Backspace`, or `✕ CLEAR` button.
@@ -61,7 +59,7 @@ All photo processing and rendering happens completely inside your browser using 
 
 ---
 
-## 🚀 Running Locally
+##  Running Locally
 
 Because **chocobooth** is built with modern ES Modules and accesses the browser MediaDevices (Webcam) API, it must be served over `http://localhost` or `https://`.
 
@@ -89,7 +87,7 @@ Install the **Live Server** extension, right-click `index.html`, and select **Op
 
 ---
 
-## 🌐 Free Deployment (HTTPS Ready)
+##  Free Deployment (HTTPS Ready)
 
 Modern desktop browsers require an **HTTPS** connection to access the webcam. All of the following free hosting platforms automatically provide HTTPS:
 
@@ -114,7 +112,7 @@ Or connect your GitHub repository on [vercel.com](https://vercel.com). No build 
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 chocobooth/
@@ -139,7 +137,7 @@ chocobooth/
 
 ---
 
-## 🎨 Configuration & Customization
+##  Configuration & Customization
 
 All colors, themes, dialogue, and timings are cleanly centralized in `js/config.js`:
 - To adjust countdown duration: edit `countdownSeconds` (default: `3`).
@@ -149,6 +147,6 @@ All colors, themes, dialogue, and timings are cleanly centralized in `js/config.
 
 ---
 
-## 🔒 Privacy
+##  Privacy
 
 All webcam frames and generated photo strips remain strictly inside your browser's local memory. No images, telemetry, or data are transmitted over the network.
