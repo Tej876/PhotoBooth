@@ -3,7 +3,7 @@
 
 **Live Website:** [https://tej876.github.io/PhotoBooth/](https://tej876.github.io/PhotoBooth/)
 
-**chocobooth** is an aesthetic, early-2000s desktop browser photobooth run by **Choco**, a regal, tortoiseshell Persian cat operator. Open the booth, allow your webcam, take 4 photos with a countdown, customize your strip with themes, vintage filters, and draggable cat stickers, and download a high-resolution vertical film strip PNG.
+**chocobooth** is an aesthetic, early-2000s desktop browser photobooth. Open the booth, allow your webcam, take 4 photos with a countdown, customize your strip with themes, vintage filters, and draggable cat stickers, and download a high-resolution vertical film strip PNG.
 
 All photo processing and rendering happens completely inside your browser using the HTML5 Canvas API. **No photos are ever uploaded anywhere.**
 
